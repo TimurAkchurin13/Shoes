@@ -1,0 +1,258 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AvaloniaApplication1.ViewModels"
+        xmlns:dg="using:Avalonia.Controls.DataGrid"
+        xmlns:converters="using:AvaloniaApplication1.Converters"
+        xmlns:models="using:AvaloniaApplication1.Models"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
+        x:Class="AvaloniaApplication1.Views.OrdersWindow"
+        x:DataType="vm:OrdersWindowViewModel"
+        Title="ООО Обувь - Заказы "
+        Width="1200" Height="700"
+        MinWidth="600" MinHeight="400"
+        WindowStartupLocation="CenterScreen"
+        Background="White"
+        Icon = "avares://AvaloniaApplication1/Assets/Icon.ico">
+
+    <Design.DataContext>
+        <vm:OrdersWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>   <!-- 0: заголовок -->
+            <RowDefinition Height="Auto"/>   <!-- 1: фильтры -->
+            <RowDefinition Height="Auto"/>   <!-- 2: кнопки -->
+            <RowDefinition Height="*"/>      <!-- 3: список заказов -->
+            <RowDefinition Height="Auto"/>   <!-- 4: статус-бар -->
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок с логотипом -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Image Grid.Column="0" 
+                   Source="/Images/Icon.png" 
+                   Width="60" 
+                   Height="60"
+                   Stretch="Uniform"
+                   Margin="0,0,15,0"/>
+
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Text="Управление заказами"
+                           FontFamily="Times New Roman"
+                           FontSize="24"
+                           FontWeight="Bold"/>
+                <TextBlock Text="ООО Обувь"
+                           FontFamily="Times New Roman"
+                           FontSize="14"
+                           Foreground="Gray"/>
+                
+            </StackPanel>
+
+            <StackPanel Grid.Column="2"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Spacing="8">
+                <Button Content="Назад"
+                    Click="OnBackClick"
+                    Background="#E0E0E0"
+                    Foreground="Black"
+                    FontFamily="Times New Roman"
+                    FontSize="14"
+                    Padding="15,8"
+                    Cursor="Hand"
+                    Margin="10,0,0,0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Блок фильтров -->
+        <Border Grid.Row="1"
+                Background="#F5F5F5"
+                CornerRadius="5"
+                Padding="15"
+                Margin="0,0,0,15"
+                IsVisible="{Binding CanUseFilters}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                    <TextBlock Text="Дата с"
+                               FontFamily="Times New Roman"
+                               FontSize="14"
+                               Margin="0,0,0,5"/>
+                    <DatePicker SelectedDate="{Binding StartDate}"
+                                FontFamily="Times New Roman"
+                                Width="180"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="1" Margin="0,0,20,0">
+                    <TextBlock Text="Дата по"
+                               FontFamily="Times New Roman"
+                               FontSize="14"
+                               Margin="0,0,0,5"/>
+                    <DatePicker SelectedDate="{Binding EndDate}"
+                                FontFamily="Times New Roman"
+                                Width="180"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="2" Margin="0,0,20,0">
+                    <TextBlock Text="Вид заказа"
+                               FontFamily="Times New Roman"
+                               FontSize="14"
+                               Margin="0,0,0,5"/>
+                    <ComboBox ItemsSource="{Binding OrderTypes}"
+                              SelectedItem="{Binding SelectedOrderType}"
+                              FontFamily="Times New Roman"
+                              FontSize="14"
+                              MinWidth="200"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Spacing="10">
+                    
+                    <Button Content="Сбросить"
+                            Command="{Binding ClearFiltersCommand}"
+                            Background="#E0E0E0"
+                            Foreground="Black"
+                            FontFamily="Times New Roman"
+                            FontSize="14"
+                            Padding="15,8"
+                            Cursor="Hand"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Кнопки управления -->
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    Margin="0,0,0,10"
+                    Spacing="10">
+            <Button Content="Добавить заказ"
+                    Command="{Binding CreateOrderCommand}"
+                    Background="#00FA9A"
+                    Foreground="Black"
+                    FontFamily="Times New Roman"
+                    FontSize="14"
+                    Padding="15,8"
+                    Cursor="Hand"
+                    IsVisible="{Binding CanEdit}"
+                    FontWeight="Bold"/>
+            
+            <StackPanel Orientation="Horizontal"
+                        Spacing="10"
+                        IsVisible="{Binding CanEdit}">
+                <Button Content="Редактировать заказ"
+                        Command="{Binding EditOrderCommand}"
+                        Background="#00FA9A"
+                        Foreground="Black"
+                        FontFamily="Times New Roman"
+                        FontSize="14"
+                        Padding="15,8"
+                        Cursor="Hand"/>
+                <Button Content="Удалить заказ"
+                        Command="{Binding DeleteOrderCommand}"
+                        Background="#FFB6C1"
+                        Foreground="Black"
+                        FontFamily="Times New Roman"
+                        FontSize="14"
+                        Padding="15,8"
+                        Cursor="Hand"/>
+                
+            </StackPanel>
+
+                      
+            
+            
+            
+           
+        </StackPanel>
+
+        <!-- Список заказов (карточки по макету) -->
+        <ScrollViewer Grid.Row="3"
+                      Margin="0,0,0,10">
+            <ItemsControl ItemsSource="{Binding Orders}"
+                          FontFamily="Times New Roman"
+                          FontSize="14">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="models:Order">
+                        <Border BorderBrush="Black"
+                                BorderThickness="1"
+                                Margin="0,0,0,10"
+                                Padding="15"
+                                Background="White"
+                                Cursor="Hand"
+                                Tapped="OrderCard_Tapped">
+                            <Border.Styles>
+                                <Style Selector="Border:pointerover">
+                                    <Setter Property="BorderBrush" Value="#00A651"/>
+                                    <Setter Property="BorderThickness" Value="2"/>
+                                </Style>
+                            </Border.Styles>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <!-- Левая секция (большая) -->
+                                <Border Grid.Column="0"
+                                        BorderBrush="Black"
+                                        BorderThickness="1"
+                                        Padding="10"
+                                        Margin="0,0,10,0">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="{Binding OrderNumber, StringFormat='Артикул заказа: {0}'}"
+                                                   FontFamily="Times New Roman"
+                                                   FontSize="14"/>
+                                        <TextBlock Text="{Binding OrderStatus, StringFormat='Статус заказа: {0}'}"
+                                                   FontFamily="Times New Roman"
+                                                   FontSize="14"/>
+                                        <TextBlock Text="{Binding PickupPointAddress, StringFormat='Адрес пункта выдачи (текст): {0}'}"
+                                                   FontFamily="Times New Roman"
+                                                   FontSize="14"
+                                                   TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding OrderDate, StringFormat='Дата заказа: {0:dd.MM.yyyy}'}"
+                                                   FontFamily="Times New Roman"
+                                                   FontSize="14"/>
+                                    </StackPanel>
+                                </Border>
+                                
+                                <!-- Правая секция (маленькая) -->
+                                <Border Grid.Column="1"
+                                        BorderBrush="Black"
+                                        BorderThickness="1"
+                                        Padding="10"
+                                        MinWidth="150">
+                                    <TextBlock Text="{Binding DeliveryDate, StringFormat='Дата доставки: {0:dd.MM.yyyy}'}"
+                                               FontFamily="Times New Roman"
+                                               FontSize="14"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"
+                                               TextAlignment="Center"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Статус бар -->
+        <Grid Grid.Row="4" 
+              Background="#7FFF00" 
+              Margin="0,0,0,0"
+              Height="40">
+            <TextBlock Text="{Binding StatusMessage}"
+                       FontFamily="Times New Roman"
+                       FontSize="14"
+                       VerticalAlignment="Center"
+                       Margin="10,0"/>
+        </Grid>
+    </Grid>
+</Window>
+

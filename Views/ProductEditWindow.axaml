@@ -1,0 +1,237 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AvaloniaApplication1.ViewModels"
+        x:Class="AvaloniaApplication1.Views.ProductEditWindow"
+        x:DataType="vm:ProductEditWindowViewModel"
+        Title="ООО «Обувь» - Карточка товара"
+        Width="800" Height="720"
+        MinWidth="800" MinHeight="720"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True"
+        Background="White"
+        Icon = "avares://AvaloniaApplication1/Assets/Icon.ico">
+
+    <Border Padding="20">
+        <ScrollViewer>
+            <StackPanel Spacing="12">
+                <TextBlock Text="{Binding WindowTitle}"
+                           FontSize="24"
+                           FontWeight="Bold" />
+
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <!-- Изображение слева -->
+                    <StackPanel>
+                        <Image x:Name="PhotoPreview"
+                               Width="300"
+                               Height="200"
+                               Stretch="Uniform"
+                               Source="avares://AvaloniaApplication1/Images/picture.png" />
+                        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,6,0,0">
+                            <Button Content="Выбрать фото" 
+                                    Click="OnChoosePhoto"
+                                    Background="#E0E0E0"
+                                    Foreground="Black"
+                                    Padding="10,6"
+                                    Cursor="Hand" />
+                            <Button Content="Очистить" 
+                                    Click="OnClearPhoto"
+                                    Background="#E0E0E0"
+                                    Foreground="Black"
+                                    Padding="10,6"
+                                    Cursor="Hand" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Поля справа -->
+                    <StackPanel Spacing="6" MinWidth="300">
+                        <StackPanel>
+                            <TextBlock Text="Артикул" 
+                                       FontFamily="Times New Roman"
+                                       FontSize="14" />
+                            <TextBox x:Name="ArticleTextBox" 
+                                     Text="{Binding Article}"
+                                     IsReadOnly="{Binding IsEditMode}"
+                                     FontFamily="Times New Roman"
+                                     FontSize="14"
+                                     Padding="8" />
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Наименование" 
+                                       FontFamily="Times New Roman"
+                                       FontSize="14" />
+                            <ComboBox x:Name="ProductNameComboBox"
+                                      ItemsSource="{Binding ProductNames}"
+                                      SelectedItem="{Binding SelectedProductName}"
+                                      FontFamily="Times New Roman"
+                                      FontSize="14">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Категория" 
+                                       FontFamily="Times New Roman"
+                                       FontSize="14" />
+                            <ComboBox x:Name="CategoryComboBox"
+                                      ItemsSource="{Binding Categories}"
+                                      SelectedItem="{Binding SelectedCategory}"
+                                      FontFamily="Times New Roman"
+                                      FontSize="14">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding CategoryName}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Производитель" 
+                                       FontFamily="Times New Roman"
+                                       FontSize="14" />
+                            <ComboBox x:Name="ManufacturerComboBox"
+                                      ItemsSource="{Binding Manufacturers}"
+                                      SelectedItem="{Binding SelectedManufacturer}"
+                                      FontFamily="Times New Roman"
+                                      FontSize="14">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ManufacturerName}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Поставщик -->
+                <StackPanel>
+                    <TextBlock Text="Поставщик" 
+                               FontFamily="Times New Roman"
+                               FontSize="14" />
+                    <ComboBox x:Name="SupplierComboBox"
+                              ItemsSource="{Binding Suppliers}"
+                              SelectedItem="{Binding SelectedSupplier}"
+                              FontFamily="Times New Roman"
+                              FontSize="14">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding SupplierName}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+
+                <!-- Единица измерения -->
+                <StackPanel>
+                    <TextBlock Text="Единица измерения" 
+                               FontFamily="Times New Roman"
+                               FontSize="14" />
+                    <ComboBox x:Name="UnitComboBox"
+                              ItemsSource="{Binding UnitOfMeasures}"
+                              SelectedItem="{Binding SelectedUnitOfMeasure}"
+                              FontFamily="Times New Roman"
+                              FontSize="14">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding UnitName}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+
+                <!-- Описание товара -->
+                <StackPanel>
+                    <TextBlock Text="Описание товара" 
+                               FontFamily="Times New Roman"
+                               FontSize="14" />
+                    <TextBox x:Name="DescriptionTextBox"
+                             Text="{Binding Description}"
+                             AcceptsReturn="True"
+                             Height="80"
+                             TextWrapping="Wrap"
+                             FontFamily="Times New Roman"
+                             FontSize="14"
+                             Padding="8" />
+                </StackPanel>
+
+                <!-- Цена, Скидка, Количество на складе -->
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                    <StackPanel Grid.Column="0" Spacing="6">
+                        <TextBlock Text="Цена" 
+                                   FontFamily="Times New Roman"
+                                   FontSize="14" />
+                        <TextBox x:Name="PriceTextBox"
+                                 Text="{Binding Price, StringFormat='{}{0:F2}'}"
+                                 FontFamily="Times New Roman"
+                                 FontSize="14"
+                                 Padding="8" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Spacing="6">
+                        <TextBlock Text="Скидка (%)" 
+                                   FontFamily="Times New Roman"
+                                   FontSize="14" />
+                        <TextBox x:Name="DiscountTextBox"
+                                 Text="{Binding Discount, StringFormat='{}{0:F1}'}"
+                                 FontFamily="Times New Roman"
+                                 FontSize="14"
+                                 Padding="8"
+                                 Watermark="0" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Spacing="6">
+                        <TextBlock Text="Количество на складе" 
+                                   FontFamily="Times New Roman"
+                                   FontSize="14" />
+                        <TextBox x:Name="StockTextBox"
+                                 Text="{Binding StockQuantity}"
+                                 FontFamily="Times New Roman"
+                                 FontSize="14"
+                                 Padding="8" />
+                    </StackPanel>
+                </Grid>
+
+                <!-- Статус -->
+                <TextBlock x:Name="EditorStatusText"
+                           Text="{Binding StatusMessage}"
+                           Foreground="Firebrick"
+                           TextWrapping="Wrap"
+                           FontFamily="Times New Roman"
+                           FontSize="12"
+                           IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+                <!-- Кнопки -->
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Button Content="Сохранить"
+                            Command="{Binding SaveCommand}"
+                            Width="140"
+                            HorizontalAlignment="Left"
+                            Background="#00FA9A"
+                            Foreground="Black"
+                            FontFamily="Times New Roman"
+                            FontSize="14"
+                            FontWeight="Bold"
+                            Padding="20,10"
+                            IsEnabled="{Binding !IsLoading}"
+                            Cursor="Hand" />
+                    <Button Content="Отмена"
+                            Command="{Binding CancelCommand}"
+                            Width="140"
+                            Background="#E0E0E0"
+                            Foreground="Black"
+                            FontFamily="Times New Roman"
+                            FontSize="14"
+                            Padding="20,10"
+                            Cursor="Hand" />
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Border>
+</Window>
+

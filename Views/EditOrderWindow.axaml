@@ -1,0 +1,294 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AvaloniaApplication1.ViewModels"
+        xmlns:models="using:AvaloniaApplication1.Models"
+        x:Class="AvaloniaApplication1.Views.EditOrderWindow"
+        x:DataType="vm:EditOrderWindowViewModel"
+        Title="ООО «Обувь» - Заказ"
+        Width="900" Height="700"
+        MinWidth="800" MinHeight="600"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True"
+        Background="White"
+        Icon="avares://AvaloniaApplication1/Assets/Icon.ico">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="Редактирование заказа"
+                   FontFamily="Times New Roman"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   Margin="0,0,0,20"/>
+
+        <ScrollViewer Grid.Row="1">
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="20">
+                <!-- Левая колонка: Данные заказа -->
+                <StackPanel Grid.Column="0" Spacing="12">
+                    <StackPanel>
+                        <TextBlock Text="Номер заказа"
+                                   FontFamily="Times New Roman"
+                                   FontSize="14"
+                                   Margin="0,0,0,5"/>
+                        <TextBox Text="{Binding OrderNumber}"
+                                 IsReadOnly="True"
+                                 FontFamily="Times New Roman"
+                                 FontSize="14"
+                                 Padding="8"
+                                 Background="#F0F0F0"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <TextBlock Text="Дата заказа"
+                                   FontFamily="Times New Roman"
+                                   FontSize="14"
+                                   Margin="0,0,0,5"/>
+                        <DatePicker SelectedDate="{Binding OrderDate}"
+                                    FontFamily="Times New Roman"
+                                    FontSize="14"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <TextBlock Text="Дата доставки"
+                                   FontFamily="Times New Roman"
+                                   FontSize="14"
+                                   Margin="0,0,0,5"/>
+                        <DatePicker SelectedDate="{Binding DeliveryDate}"
+                                    FontFamily="Times New Roman"
+                                    FontSize="14"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <TextBlock Text="Пункт выдачи"
+                                   FontFamily="Times New Roman"
+                                   FontSize="14"
+                                   Margin="0,0,0,5"/>
+                        <ComboBox ItemsSource="{Binding PickupPoints}"
+                                  SelectedItem="{Binding SelectedPickupPoint}"
+                                  FontFamily="Times New Roman"
+                                  FontSize="14">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding FullAddress}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <TextBlock Text="Клиент"
+                                   FontFamily="Times New Roman"
+                                   FontSize="14"
+                                   Margin="0,0,0,5"/>
+                        <ComboBox ItemsSource="{Binding Clients}"
+                                  SelectedItem="{Binding SelectedClient}"
+                                  FontFamily="Times New Roman"
+                                  FontSize="14">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding FullName}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <TextBlock Text="Код получения"
+                                   FontFamily="Times New Roman"
+                                   FontSize="14"
+                                   Margin="0,0,0,5"/>
+                        <TextBox Text="{Binding ReceiptCode}"
+                                 FontFamily="Times New Roman"
+                                 FontSize="14"
+                                 Padding="8"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <TextBlock Text="Статус"
+                                   FontFamily="Times New Roman"
+                                   FontSize="14"
+                                   Margin="0,0,0,5"/>
+                        <ComboBox ItemsSource="{Binding OrderStatuses}"
+                                  SelectedItem="{Binding SelectedOrderStatus}"
+                                  FontFamily="Times New Roman"
+                                  FontSize="14"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <TextBlock Text="Сумма"
+                                   FontFamily="Times New Roman"
+                                   FontSize="14"
+                                   Margin="0,0,0,5"/>
+                        <TextBox Text="{Binding TotalAmount, StringFormat='{}{0:F2}'}"
+                                 IsReadOnly="True"
+                                 FontFamily="Times New Roman"
+                                 FontSize="14"
+                                 Padding="8"
+                                 Background="#F0F0F0"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Правая колонка: Товары в заказе -->
+                <StackPanel Grid.Column="1" Spacing="12">
+                    <TextBlock Text="Товары в заказе"
+                               FontFamily="Times New Roman"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Margin="0,0,0,10"/>
+
+                    <!-- Таблица товаров -->
+                    <Border BorderBrush="#E0E0E0"
+                            BorderThickness="1"
+                            CornerRadius="5"
+                            Padding="10"
+                            MaxHeight="400">
+                        <ScrollViewer>
+                            <ItemsControl ItemsSource="{Binding OrderDetails}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="#E0E0E0"
+                                                BorderThickness="0,0,0,1"
+                                                Padding="8,4"
+                                                Margin="0,0,0,4">
+                                            <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto">
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="{Binding ProductName}"
+                                                               FontFamily="Times New Roman"
+                                                               FontSize="14"
+                                                               FontWeight="Bold"/>
+                                                    <TextBlock Text="{Binding Article}"
+                                                               FontFamily="Times New Roman"
+                                                               FontSize="12"
+                                                               Foreground="Gray"/>
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding Quantity}"
+                                                           FontFamily="Times New Roman"
+                                                           FontSize="14"
+                                                           VerticalAlignment="Center"
+                                                           Margin="10,0"
+                                                           MinWidth="30"
+                                                           TextAlignment="Center"/>
+                                                <TextBlock Grid.Column="2"
+                                                           Text="{Binding UnitPrice, StringFormat='{}{0:F2}'}"
+                                                           FontFamily="Times New Roman"
+                                                           FontSize="14"
+                                                           VerticalAlignment="Center"
+                                                           Margin="10,0"
+                                                           MinWidth="80"
+                                                           TextAlignment="Right"/>
+                                                <StackPanel Grid.Column="3"
+                                                            Orientation="Horizontal"
+                                                            VerticalAlignment="Center"
+                                                            Margin="10,0">
+                                                    <Button Content="-"
+                                                            Command="{Binding $parent[ItemsControl].((vm:EditOrderWindowViewModel)DataContext).DecreaseQuantityCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Width="25"
+                                                            Height="25"
+                                                            FontSize="14"
+                                                            Background="#E0E0E0"
+                                                            Margin="0,0,5,0"/>
+                                                    <Button Content="+"
+                                                            Command="{Binding $parent[ItemsControl].((vm:EditOrderWindowViewModel)DataContext).IncreaseQuantityCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Width="25"
+                                                            Height="25"
+                                                            FontSize="14"
+                                                            Background="#E0E0E0"
+                                                            Margin="5,0,0,0"/>
+                                                </StackPanel>
+                                                <Button Grid.Column="4"
+                                                        Content="✕"
+                                                        Command="{Binding $parent[ItemsControl].((vm:EditOrderWindowViewModel)DataContext).RemoveProductCommand}"
+                                                        CommandParameter="{Binding}"
+                                                        Width="25"
+                                                        Height="25"
+                                                        FontSize="12"
+                                                        Background="#FF6B6B"
+                                                        Foreground="White"
+                                                        Margin="10,0,0,0"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Border>
+
+                    <!-- Добавление товара -->
+                    <StackPanel Spacing="8" Margin="0,10,0,0">
+                        <TextBlock Text="Добавить товар"
+                                   FontFamily="Times New Roman"
+                                   FontSize="14"
+                                   FontWeight="Bold"/>
+                        <ComboBox ItemsSource="{Binding AvailableProducts}"
+                                  SelectedItem="{Binding SelectedProduct}"
+                                  FontFamily="Times New Roman"
+                                  FontSize="14">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <Run Text="{Binding Article}"/>
+                                        <Run Text=" - "/>
+                                        <Run Text="{Binding ProductName}"/>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <Button Content="Добавить товар"
+                                Command="{Binding AddProductCommand}"
+                                Background="#00FA9A"
+                                Foreground="Black"
+                                FontFamily="Times New Roman"
+                                FontSize="14"
+                                Padding="15,8"
+                                Cursor="Hand"/>
+                        
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="10"
+                    Margin="0,20,0,0">
+            <TextBlock Text="{Binding StatusMessage}"
+                       FontFamily="Times New Roman"
+                       FontSize="12"
+                       Foreground="Red"
+                       VerticalAlignment="Center"
+                       Margin="0,0,20,0"
+                       IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+            <Button Content="Отмена"
+                    Command="{Binding CancelCommand}"
+                    Background="#E0E0E0"
+                    Foreground="Black"
+                    FontFamily="Times New Roman"
+                    FontSize="14"
+                    Padding="20,10"
+                    MinWidth="120"
+                    Cursor="Hand"/>
+            <Button Content="Сохранить"
+                    Command="{Binding SaveCommand}"
+                    Background="#00FA9A"
+                    Foreground="Black"
+                    FontFamily="Times New Roman"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Padding="20,10"
+                    MinWidth="120"
+                    IsEnabled="{Binding !IsLoading}"
+                    Cursor="Hand"/>
+        </StackPanel>
+    </Grid>
+</Window>
+

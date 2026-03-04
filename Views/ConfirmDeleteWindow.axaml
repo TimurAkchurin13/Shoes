@@ -1,0 +1,55 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AvaloniaApplication1.ViewModels"
+        x:Class="AvaloniaApplication1.Views.ConfirmDeleteWindow"
+        x:DataType="vm:ConfirmDeleteWindowViewModel"
+        Title="ООО &quot;Обувь&quot; - Подтверждение удаления"
+        Width="400" Height="200"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Background="White"
+        Icon = "avares://AvaloniaApplication1/Assets/Icon.ico">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="{Binding Message}"
+                   FontFamily="Times New Roman"
+                   FontSize="16"
+                   TextWrapping="Wrap"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,20"/>
+
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="10">
+            <Button Content="Отмена"
+                    Command="{Binding CancelCommand}"
+                    Background="#E0E0E0"
+                    Foreground="Black"
+                    FontFamily="Times New Roman"
+                    FontSize="14"
+                    Padding="20,8"
+                    MinWidth="100"
+                    Cursor="Hand"/>
+            
+            <Button Content="Удалить"
+                    Command="{Binding ConfirmCommand}"
+                    Background="#FF6B6B"
+                    Foreground="White"
+                    FontFamily="Times New Roman"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Padding="20,8"
+                    MinWidth="100"
+                    Cursor="Hand"/>
+        </StackPanel>
+    </Grid>
+</Window>
+
